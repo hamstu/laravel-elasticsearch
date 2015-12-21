@@ -4,7 +4,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Monolog\Logger;
 use Config;
-use Elasticsearch\Client;
+use Elasticsearch\ClientBuilder;
 
 
 /**
@@ -42,16 +42,7 @@ class LaravelElasticsearchServiceProvider extends ServiceProvider {
 	{
 		$this->app->singleton('elasticsearch', function()
 			{
-
-				$connParams = array();
-				$connParams['hosts'] = array('localhost:9200');
-				$connParams['logPath'] = storage_path() . '/logs/elasticsearch-' . php_sapi_name() . '.log';
-				$connParams['logLevel'] = Logger::INFO;
-
-				// merge settings from app/config/elasticsearch.php
-				$params = array_merge($connParams, Config::get('elasticsearch'));
-
-				return new Client($params);
+				return ClientBuilder::create()->build();
 			});
 
 		// Shortcut so developers don't need to add an Alias in app/config/app.php
